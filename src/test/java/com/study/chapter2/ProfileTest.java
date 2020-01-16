@@ -16,6 +16,7 @@ class ProfileTest {
     private BooleanQuestion question;
     private Criteria criteria;
 
+
     @BeforeEach
     public void setup() {
         profile = new Profile("Bull Hockey, Inc.");
