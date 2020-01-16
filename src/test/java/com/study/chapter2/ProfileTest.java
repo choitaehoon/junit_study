@@ -1,8 +1,12 @@
 package com.study.chapter2;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.closeTo;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -40,4 +44,22 @@ class ProfileTest {
 
         assertTrue(matches);
     }
+
+    @Test
+    public void assertDoubleEquals() {
+        assertThat(2.32 * 3, equalTo(6.96));
+    }
+
+    @DisplayName("부동 소수점이 잘 읽히지 않는 테스트")
+    @Test
+    public void assertWithTolerance() {
+        assertTrue(Math.abs(2.32 * 3) - 6.96 < 0.005);
+    }
+
+    @DisplayName("가독성 좋은 부동 소수점 테스트")
+    @Test
+    public void assertDoublesCloseTo() {
+        assertThat(2.32 * 3, closeTo(6.96, 0.0005));
+    }
+
 }
