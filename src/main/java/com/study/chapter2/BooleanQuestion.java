@@ -1,8 +1,8 @@
 package com.study.chapter2;
 
 public class BooleanQuestion extends Question {
-    public BooleanQuestion(int id, String text) {
-        super(id, text, new String[] { "No", "Yes" });
+    public BooleanQuestion(String text) {
+        super(text, new String[] { "No", "Yes" });
     }
 
     @Override

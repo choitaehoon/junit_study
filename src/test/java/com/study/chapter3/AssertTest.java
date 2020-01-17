@@ -7,7 +7,6 @@ import org.junit.rules.ExpectedException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class AssertTest {
 
@@ -57,7 +56,7 @@ public class AssertTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @BeforeEach
-    public void setUp() {
+    public void setup() {
         account = new Account("an account name");
     }
 

@@ -3,10 +3,8 @@ package com.study.chapter2;
 public abstract class Question {
     private String text;
     private String[] answerChoices;
-    private int id;
 
-    public Question(int id, String text, String[] answerChoices) {
-        this.id = id;
+    public Question(String text, String[] answerChoices) {
         this.text = text;
         this.answerChoices = answerChoices;
     }

@@ -20,7 +20,7 @@ class ProfileTest {
     @BeforeEach
     public void setup() {
         profile = new Profile("Bull Hockey, Inc.");
-        question = new BooleanQuestion(1, "Got bounses?");
+        question = new BooleanQuestion("Got bounses?");
         criteria = new Criteria();
     }
 
