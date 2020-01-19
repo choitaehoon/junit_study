@@ -1,15 +1,14 @@
 package com.study.chapter6;
 
+import com.github.noconnor.junitperf.JUnitPerfRule;
+import com.github.noconnor.junitperf.JUnitPerfTest;
 import com.study.chapter2.Answer;
-import com.study.chapter2.Bool;
-import com.study.chapter2.BooleanQuestion;
 import com.study.chapter2.Profile;
-import com.study.chapter5.PercentileQuestion;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
-import java.util.function.Predicate;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.number.IsCloseTo.*;
@@ -17,6 +16,9 @@ import static org.hamcrest.number.IsCloseTo.*;
 public class NewtonTest {
 
     private Profile profile;
+
+    @Rule
+    public JUnitPerfRule perfRule = new JUnitPerfRule();
 
     static class Newton {
         private static final double TOLERANCE = 1E-16;
@@ -29,7 +31,7 @@ public class NewtonTest {
             return approx;
         }
     }
-    
+
     private long run(int times, Runnable func) {
         long start = System.nanoTime();
         for (int i = 0; i<times; ++i)
@@ -49,6 +51,7 @@ public class NewtonTest {
     }
 
     @Test
+    @JUnitPerfTest(maxExecutionsPerSecond = 1000, warmUpMs = 10_000)
     public void squareRoot() {
         double result = Newton.squareRoot(250.0);
         assertThat(result * result, closeTo(250.0, Newton.TOLERANCE));
