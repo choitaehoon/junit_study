@@ -5,7 +5,8 @@ public class Bearing {
     private int value;
 
     public Bearing(int value) {
-        if (value < 0 || value > MAX) throw new BearingOutOfRangeException();
+        if (value < 0 || value > MAX)
+            throw new BearingOutOfRangeException();
         this.value = value;
     }
 
