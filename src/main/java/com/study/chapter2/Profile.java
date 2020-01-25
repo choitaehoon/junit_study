@@ -1,5 +1,7 @@
 package com.study.chapter2;
 
+import com.study.chapter9.MatchSet;
+
 import java.util.*;
 
 public class Profile {
@@ -19,24 +21,6 @@ public class Profile {
         answers.put(answer.getQuestionText(), answer);
     }
 
-    public boolean matches(Criteria criteria) {
-        calculateScore(criteria);
-
-        if (doesNotMeetAnyMustMatchCriterion(criteria)) {
-            return false;
-        }
-
-        return anyMatches(criteria);
-    }
-
-    private void calculateScore(Criteria criteria) {
-        score = 0;
-        for (Criterion criterion : criteria) {
-            if (criterion.matches(answerMatching(criterion))) {
-                score += criterion.getWeight().getValue();
-            }
-        }
-    }
 
     private boolean doesNotMeetAnyMustMatchCriterion(Criteria criteria) {
         for (Criterion criterion : criteria) {
@@ -51,10 +35,6 @@ public class Profile {
 
     public int score() {
         return score;
-    }
-
-    private Answer answerMatching(Criterion criterion) {
-        return answers.get(criterion.getAnswer().getQuestionText());
     }
 
     private boolean anyMatches(Criteria criteria) {
