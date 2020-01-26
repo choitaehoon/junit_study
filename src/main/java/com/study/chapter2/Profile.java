@@ -3,6 +3,8 @@ package com.study.chapter2;
 import com.study.chapter9.MatchSet;
 
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class Profile {
     private Map<String, Answer> answers = new HashMap<>();
@@ -17,33 +19,23 @@ public class Profile {
         return name;
     }
 
+    public boolean matches(Criteria criteria) {
+        MatchSet matchSet = new MatchSet(answers, criteria);
+        score = matchSet.getScore();
+        return matchSet.matches();
+    }
+
     public void add(Answer answer) {
         answers.put(answer.getQuestionText(), answer);
     }
 
-
-    private boolean doesNotMeetAnyMustMatchCriterion(Criteria criteria) {
-        for (Criterion criterion : criteria) {
-            boolean match = criterion.matches(answerMatching(criterion));
-            if (!match && criterion.getWeight() == Weight.MustMatch) {
-                return true;
-            }
-        }
-
-        return false;
+    public MatchSet getMatchSet(Criteria criteria) {
+        return new MatchSet(answers, criteria);
     }
 
-    public int score() {
-        return score;
+    public List<Answer> find(Predicate<Answer> pred) {
+        return answers.values().stream()
+                .filter(pred)
+                .collect(Collectors.toList());
     }
-
-    private boolean anyMatches(Criteria criteria) {
-        boolean anyMatches = false;
-        for (Criterion criterion : criteria) {
-            anyMatches |= criterion.matches(answerMatching(criterion));
-        }
-
-        return anyMatches;
-    }
-
 }
