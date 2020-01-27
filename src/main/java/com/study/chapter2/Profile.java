@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 
 public class Profile {
     private Map<String, Answer> answers = new HashMap<>();
-    private int score;
     private String name;
 
     public Profile(String name) {
@@ -17,12 +16,6 @@ public class Profile {
 
     public String getName() {
         return name;
-    }
-
-    public boolean matches(Criteria criteria) {
-        MatchSet matchSet = new MatchSet(answers, criteria);
-        score = matchSet.getScore();
-        return matchSet.matches();
     }
 
     public void add(Answer answer) {
@@ -37,5 +30,10 @@ public class Profile {
         return answers.values().stream()
                 .filter(pred)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }
