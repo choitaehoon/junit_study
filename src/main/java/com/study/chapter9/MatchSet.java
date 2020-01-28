@@ -1,22 +1,17 @@
 package com.study.chapter9;
 
-import com.study.chapter2.Answer;
 import com.study.chapter2.Criteria;
 import com.study.chapter2.Criterion;
 import com.study.chapter2.Weight;
 
-import java.util.Map;
-
 public class MatchSet {
 
-    private Map<String, Answer> answer;
-    private int score = 0;
+    private AnswerCollection answer;
     private Criteria criteria;
 
-    public MatchSet(Map<String, Answer> answer, Criteria criteria) {
-        this.answer = answer;
+    public MatchSet(AnswerCollection answers, Criteria criteria) {
+        this.answer = answers;
         this.criteria = criteria;
-        calculateScore();
     }
 
     public boolean matches() {
@@ -27,18 +22,9 @@ public class MatchSet {
         return anyMatches();
     }
 
-    private void calculateScore() {
-        score = 0;
-        for (Criterion criterion : criteria) {
-            if (criterion.matches(answerMatching(criterion))) {
-                score += criterion.getWeight().getValue();
-            }
-        }
-    }
-
     private boolean doesNotMeetAnyMustMatchCriterion() {
         for (Criterion criterion : criteria) {
-            boolean match = criterion.matches(answerMatching(criterion));
+            boolean match = criterion.matches(answer.answerMatching(criterion));
             if (!match && criterion.getWeight() == Weight.MustMatch) {
                 return true;
             }
@@ -50,17 +36,19 @@ public class MatchSet {
     private boolean anyMatches() {
         boolean anyMatches = false;
         for (Criterion criterion : criteria) {
-            anyMatches |= criterion.matches(answerMatching(criterion));
+            anyMatches |= criterion.matches(answer.answerMatching(criterion));
         }
 
         return anyMatches;
     }
 
-    private Answer answerMatching(Criterion criterion) {
-        return answer.get(criterion.getAnswer().getQuestionText());
-    }
-
     public int getScore() {
+        int score = 0;
+        for (Criterion criterion : criteria) {
+            if (criterion.matches(answer.answerMatching(criterion))) {
+                score += criterion.getWeight().getValue();
+            }
+        }
         return score;
     }
 

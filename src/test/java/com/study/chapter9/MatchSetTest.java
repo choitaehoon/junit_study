@@ -1,7 +1,6 @@
 package com.study.chapter9;
 
 import com.study.chapter2.*;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
