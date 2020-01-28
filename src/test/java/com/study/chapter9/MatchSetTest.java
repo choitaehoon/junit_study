@@ -1,9 +1,9 @@
 package com.study.chapter9;
 
-import com.study.chapter2.Answer;
-import com.study.chapter2.Criteria;
-import com.study.chapter2.Question;
+import com.study.chapter2.*;
 import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,19 +17,28 @@ class MatchSetTest {
 
     private Map<String, Answer> answers;
 
-    @Before
+    private Question questionIsThereRelocation;
+    private Answer answerReimbursesTuition;
+    private Answer answerDoesNotReimburseTuition;
+
+    @BeforeEach
     public void createAnswers() {
         answers = new HashMap<>();
     }
 
-    @Before
+    @BeforeEach
     public void createCriteria() {
         criteria = new Criteria();
     }
 
-    @Before
+    @BeforeEach
     public void createQuestionsAndAnswers() {
-
+        questionReimbursesTuition =
+                new BooleanQuestion("Reimburses tuition?");
+        answerReimbursesTuition =
+                new Answer(questionReimbursesTuition, Bool.TRUE);
+        answerDoesNotReimburseTuition =
+                new Answer(questionReimbursesTuition, Bool.FALSE);
     }
 
     private void add(Answer answer) {
@@ -38,5 +47,21 @@ class MatchSetTest {
 
     private MatchSet createMatchSet() {
         return new MatchSet(answers, criteria);
+    }
+
+    @Test
+    public void matchAnswersFalseWhenMustMatchCriteriaNotMet() {
+        add(answerDoesNotReimburseTuition);
+        criteria.add(new Criterion(answerReimbursesTuition, Weight.MustMatch));
+
+        assertFalse(createMatchSet().matches());
+    }
+
+    @Test
+    public void matchAnswersTrueForAnyDontCareCriteria() {
+        add(answerReimbursesTuition);
+        criteria.add(new Criterion(answerReimbursesTuition, Weight.DontCare));
+
+        assertTrue(createMatchSet().matches());
     }
 }
