@@ -22,9 +22,9 @@ public class Profile {
         answers.put(answer.getQuestionText(), answer);
     }
 
-    public MatchSet getMatchSet(Criteria criteria) {
-        return new MatchSet(answers, criteria);
-    }
+//    public MatchSet getMatchSet(Criteria criteria) {
+//        return new MatchSet(answers, criteria);
+//    }
 
     public List<Answer> find(Predicate<Answer> pred) {
         return answers.values().stream()

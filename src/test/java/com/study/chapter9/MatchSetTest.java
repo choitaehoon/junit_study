@@ -44,23 +44,23 @@ class MatchSetTest {
         answers.put(answer.getQuestionText(), answer);
     }
 
-    private MatchSet createMatchSet() {
-        return new MatchSet(answers, criteria);
-    }
+//    private MatchSet createMatchSet() {
+//        return new MatchSet(answers, criteria);
+//    }
 
-    @Test
-    public void matchAnswersFalseWhenMustMatchCriteriaNotMet() {
-        add(answerDoesNotReimburseTuition);
-        criteria.add(new Criterion(answerReimbursesTuition, Weight.MustMatch));
-
-        assertFalse(createMatchSet().matches());
-    }
-
-    @Test
-    public void matchAnswersTrueForAnyDontCareCriteria() {
-        add(answerReimbursesTuition);
-        criteria.add(new Criterion(answerReimbursesTuition, Weight.DontCare));
-
-        assertTrue(createMatchSet().matches());
-    }
+//    @Test
+//    public void matchAnswersFalseWhenMustMatchCriteriaNotMet() {
+//        add(answerDoesNotReimburseTuition);
+//        criteria.add(new Criterion(answerReimbursesTuition, Weight.MustMatch));
+//
+//        assertFalse(createMatchSet().matches());
+//    }
+//
+//    @Test
+//    public void matchAnswersTrueForAnyDontCareCriteria() {
+//        add(answerReimbursesTuition);
+//        criteria.add(new Criterion(answerReimbursesTuition, Weight.DontCare));
+//
+//        assertTrue(createMatchSet().matches());
+//    }
 }

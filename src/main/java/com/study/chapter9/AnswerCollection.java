@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class AnswerCollection {
 
-    private Map<String, Answer> answers = new HashMap<>();
+    private final Map<String, Answer> answers = new HashMap<>();
 
     public void add(Answer answer) {
         answers.put(answer.getQuestionText(), answer);
