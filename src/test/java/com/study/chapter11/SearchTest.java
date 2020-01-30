@@ -1,55 +1,64 @@
 package com.study.chapter11;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static com.study.util.ContainsMatches.containsMatches;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.*;
 import java.net.*;
-import java.util.*;
 import java.util.logging.*;
-import static org.hamcrest.CoreMatchers.*;
 
 class SearchTest {
 
-    @Test
-    public void testSearch() {
-        try {
-            String pageContent = "There are certain queer times and occasions "
-                    + "in this strange mixed affair we call life when a man "
-                    + "takes this whole universe for a vast practical joke, "
-                    + "though the wit thereof he but dimly discerns, and more "
-                    + "than suspects that the joke is at nobody's expense but "
-                    + "his own.";
-            byte[] bytes = pageContent.getBytes();
-            ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
-            // search
-            Search search = new Search(stream, "practical joke", "1");
-            Search.LOGGER.setLevel(Level.OFF);
-            search.setSurroundingCharacterCount(10);
-            search.execute();
-            assertFalse(search.errored());
-            List<Match> matches = search.getMatches();
-            assertThat(matches, is(notNullValue()));
-            assertTrue(matches.size() >= 1);
-            Match match = matches.get(0);
-            assertThat(match.searchString, equalTo("practical joke"));
-            assertThat(match.surroundingContext,
-                    equalTo("or a vast practical joke, though t"));
-            stream.close();
+    private static final String A_TITLE = "1";
+    private InputStream stream;
 
-            // negative
-            URLConnection connection =
-                    new URL("http://bit.ly/15sYPA7").openConnection();
-            InputStream inputStream = connection.getInputStream();
-            search = new Search(inputStream, "smelt", "http://bit.ly/15sYPA7");
+    @BeforeEach
+    public void turnOffLogging() {
+        Search.LOGGER.setLevel(Level.OFF);
+    }
+
+    @AfterEach
+    public void closeResources() throws IOException {
+        stream.close();
+    }
+
+    @Test
+    public void returnsMatchesShowingContextWhenSearchStringInContent(){
+            stream = streamOn();
+            Search search = new Search(stream, "practical joke", A_TITLE);
+            search.setSurroundingCharacterCount(10);
+
             search.execute();
-            assertThat(search.getMatches().size(), equalTo(0));
-            stream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail("exception thrown in test" + e.getMessage());
-        }
+
+            assertThat(search.getMatches(), containsMatches(new Match[] {
+                new Match(A_TITLE, "practical joke",
+                        "or a vast practical joke, though t") }));
+    }
+
+    private InputStream streamOn() {
+        return new ByteArrayInputStream(("There are certain queer times and occasions " +
+                "in this strange mixed affair w call life when a man takes this whole" +
+                " universe for a vast practical joke, though the wit thereof he but " +
+                "dimly discerns, and more than suspects that the joke is at nobody's" +
+                " expense but his own.").getBytes());
+    }
+
+    @Test
+    public void noMatchesReturnedWhenSearchStringNotInContent()
+        throws IOException {
+
+        URLConnection connection =
+                new URL("http://bit.ly/15sYPA7").openConnection();
+        stream = connection.getInputStream();
+        Search search = new Search(stream, "smelt", A_TITLE);
+
+        search.execute();
+
+        assertTrue(search.getMatches().isEmpty());
     }
 }
