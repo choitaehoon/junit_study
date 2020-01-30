@@ -32,7 +32,6 @@ class AddressRetrieverTest {
         when(http.get(contains("lat=38.000000&lon=-104.000000")))
                 .thenReturn("{\"address\":{"
                         + "\"house_number\":\"324\","
-                        // ...
                         + "\"road\":\"North Tejon Street\","
                         + "\"city\":\"Colorado Springs\","
                         + "\"state\":\"Colorado\","
