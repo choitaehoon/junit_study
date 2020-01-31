@@ -9,7 +9,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.*;
-import java.net.*;
 import java.util.logging.*;
 
 class SearchTest {
@@ -29,36 +28,60 @@ class SearchTest {
 
     @Test
     public void returnsMatchesShowingContextWhenSearchStringInContent(){
-            stream = streamOn();
-            Search search = new Search(stream, "practical joke", A_TITLE);
+            stream = streamOn("rest of text here"
+                                + "1234567890search term1234567890"
+                                + "more rest of text");
+            Search search = new Search(stream, "search term", A_TITLE);
             search.setSurroundingCharacterCount(10);
 
             search.execute();
 
             assertThat(search.getMatches(), containsMatches(new Match[] {
-                new Match(A_TITLE, "practical joke",
-                        "or a vast practical joke, though t") }));
+                new Match(A_TITLE, "search term",
+                        "1234567890search term1234567890") }));
     }
 
-    private InputStream streamOn() {
-        return new ByteArrayInputStream(("There are certain queer times and occasions " +
-                "in this strange mixed affair w call life when a man takes this whole" +
-                " universe for a vast practical joke, though the wit thereof he but " +
-                "dimly discerns, and more than suspects that the joke is at nobody's" +
-                " expense but his own.").getBytes());
+    private InputStream streamOn(String pageContent) {
+        return new ByteArrayInputStream(pageContent.getBytes());
     }
 
     @Test
-    public void noMatchesReturnedWhenSearchStringNotInContent()
-        throws IOException {
-
-        URLConnection connection =
-                new URL("http://bit.ly/15sYPA7").openConnection();
-        stream = connection.getInputStream();
-        Search search = new Search(stream, "smelt", A_TITLE);
+    public void noMatchesReturnedWhenSearchStringNotInContent() {
+        stream = streamOn("any text");
+        Search search = new Search(stream, "text that doesn't match", A_TITLE);
 
         search.execute();
 
         assertTrue(search.getMatches().isEmpty());
     }
+
+    @Test
+    public void returns_Errored_When_UnableToRead_Stream() {
+        stream = create_Stream_Throwing_Error_WhenRead();
+        Search search = new Search(stream, "", "");
+
+        search.execute();
+
+        assertTrue(search.errored());
+    }
+
+    private InputStream create_Stream_Throwing_Error_WhenRead() {
+        return new InputStream() {
+            @Override
+            public int read() throws IOException {
+                throw new IOException();
+            }
+        };
+    }
+
+    @Test
+    public void errored_returns_false_when_read_succeeds() {
+        stream = streamOn("");
+        Search search = new Search(stream, "", "");
+
+        search.execute();
+
+        assertFalse(search.errored());
+    }
+
 }
