@@ -1,7 +1,5 @@
 package com.study.chapter12;
 
-import java.util.Optional;
-
 public class Answer {
 
     private int i;
