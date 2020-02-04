@@ -62,6 +62,6 @@ public class MatchSet implements Comparable<MatchSet> {
 
    @Override
    public int compareTo(MatchSet that) {
-      return new Integer(getScore()).compareTo(new Integer(that.getScore()));
+      return Integer.compare(getScore(), that.getScore());
    }
 }
